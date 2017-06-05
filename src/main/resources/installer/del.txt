@@ -1,0 +1,6 @@
+cd /d %path%
+del /s /q /f *.*
+for /d %%i in (*) do (
+     rd /s /q "%%i"
+    del /a /f /q *.*
+)

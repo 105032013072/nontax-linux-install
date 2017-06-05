@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<variable name="PRODUCT_NAME" value="non tax " />
+	<variable name="VERSION_NUMBER" value="3.0" />
+	<variable name="EDITION" value="PE" />
+	<variable name="RUNNER_TYPE" value="install" />
+	<!-- 安装此产品需要的空间，以MB为单位 -->
+	<variable name="DISK_NEEDED" value="1024" />
+	<loadproperties srcfile="productinfo.properties" />
+	<renderer classname="com.bosssoft.platform.installer.wizard.gui.StepListRenderer" />
+
+	<steps firststep="01">
+		<step id="01" desc="Install Initialize">
+			<echo message="start install bosssoft gateway PE............" />
+			<if>
+				<equals arg1="${IS_SILENT_INSTALL}" arg2="true" />
+				<then>
+					<action name="silent installing init"
+						classname="com.bosssoft.platform.installer.wizard.action.SilentInit" />
+				</then>
+			</if>
+			<action name="init install"
+				classname="com.bosssoft.platform.installer.wizard.action.InstallerInitialize"
+				desc="Installer Initialize..." />
+			<echo message="INSTALL_ROOT ............${INSTALL_ROOT}" />
+			<action name="get temp dir" classname="com.bosssoft.platform.installer.wizard.action.GetTempDir"
+				desc="get temprary dir">
+				<parameter name="variable_key" value="TEMP_DIR" />
+			</action>
+			<echo message="tempdir == ${TEMP_DIR}" />
+			<nextstep default="011" />
+		</step>
+		<step id="011" desc="Temp Space Check">
+			<action name="check temp space" classname="com.bosssoft.platform.installer.wizard.action.CheckDiskSpace"
+				desc="Disk space is enough">
+				<parameter name="DIR" value="${TEMP_DIR}" />
+				<parameter name="SPACESIZE" value="200" />
+				<parameter name="VARIABLE_INDEX" value="TEMPSPACE_ENOUGH" />
+			</action>
+			<nextstep discriminator="${TEMPSPACE_ENOUGH}">
+				<branch id="true" stepid="02" />
+				<branch id="false" stepid="012" />
+			</nextstep>
+		</step>
+		<step id="012" desc="TempSpaceChoose">
+			<gui setuppanel="com.bosssoft.platform.installer.wizard.gui.TempSpaceChoosePanel"
+				controlpanel="com.bosssoft.platform.installer.wizard.gui.ConfirmCancelControlPanel"
+				render="false" />
+			<nextstep default="011" />
+		</step>
+		
+		<step id="02" desc="Installing" auto="true">
+			<gui setuppanel="com.bosssoft.platform.installer.wizard.gui.InstallingPanel" />
+			<actionscall id="install" />
+			<nextstep default="03" />
+		</step>
+		<step id="03" desc="Finished">
+			<gui setuppanel="com.bosssoft.platform.installer.wizard.gui.InstallFinishedPanel" />
+		</step>
+	</steps>
+
+	<actions id="install">
+		<!--创建安装目录-->
+		<mkdir dir="${INSTALL_DIR}/nontax" />
+		<setvalue key="INSTALL_DIR" value="${INSTALL_DIR}/nontax" />
+		
+		<!--获取Ip-->
+		<action name="getip" classname="com.bosssoft.install.nontax.linux.action.GetIp">
+		</action>	
+		
+		<!--安装jdk-->
+		<unzip src="${INSTALL_ROOT}/resource/jdk/1.8/jdk.zip" dest="${INSTALL_DIR}/java_1.8" scale="10"/>
+		   <setvalue key="JAVA_HOME" value="${INSTALL_DIR}/java_1.8/jdk1.8.0_91" />
+		   <setvalue key="classpath" value="$JAVA_HOME/lib" />
+		   <setvalue key="path" value="$PATH:$JAVA_HOME/bin" />
+		   <setvalue key="java_path" value="${INSTALL_DIR}/java_1.8/jdk1.8.0_91/bin/java" />
+
+		<!--安装redis-->
+		<echo
+			message="...... unzip ${INSTALL_ROOT}/resource/redis/redis.zip to ${INSTALL_DIR}" />
+		<unzip
+			  src="${INSTALL_ROOT}/resource/redis/redis.zip"
+			   dest="${INSTALL_DIR}" scale="10" />
+		  <setvalue key="redis_path" value="${INSTALL_DIR}/redis-3.2.8/src/redis-server ${INSTALL_DIR}/redis-3.2.8/redis.conf" />
+		<!--安装zookeeper-->
+		<echo
+			message="...... unzip ${INSTALL_ROOT}/resource/zookeeper/zookeeper-3.4.6.zip to ${INSTALL_DIR}" />
+		<unzip
+			  src="${INSTALL_ROOT}/resource/zookeeper/zookeeper-3.4.6.zip"
+			   dest="${INSTALL_DIR}" scale="10" />
+			   <setvalue key="zookeeper_path" value="${INSTALL_DIR}/zookeeper-3.4.6/bin/zkServer.sh start" />
+		
+		<!--拷贝相关资源到安装目录-->
+		<echo
+			message="copy resource to ${INSTALL_DIR}" />
+		<copyfile src="${INSTALL_ROOT}/readme_cn.txt" dest="${INSTALL_DIR}/readme_cn.txt" />
+		
+		<!--安装相关组件-->
+		<action name="deploy option components" classname="com.bosssoft.install.nontax.linux.action.DeployOptionCompsSilent"
+			desc="Deploy option components" scale="60">
+		  	<parameter name="INSTALL_FILES" value="${INSTALL_ROOT}/option_comps/nginx/nginx_install.sh" />
+		</action>
+		<setvalue key="nginx_path" value="${INSTALL_DIR}/nginx-1.13.0/nginx/sbin/nginx -c ${INSTALL_DIR}/nginx-1.13.0/conf/nginx.conf"/>
+		
+		
+		<!--配置nginx的转发路径-->
+		<action name="config nginx" classname="com.bosssoft.install.nontax.linux.action.ConfigComponents"
+			desc="Deploy option components" scale="5">
+			<parameter name="NGINX_CONFIG_PATH" value="${INSTALL_DIR}/nginx-1.13.0/conf/nginx.conf" />
+			<parameter name="CONFIG_TEMPLATE_PATH" value="${INSTALL_ROOT}/installer/nginx_template.txt" />
+		</action>
+		
+		<!--初始化应用配置文件(该步骤要在BOSSSOFT_SERVER_HOME创建之前)-->
+		<action name="init config" classname="com.bosssoft.install.nontax.linux.action.InitConfig"
+			desc="init config" scale="5">
+			<parameter name="INIT_FILES" value="${INSTALL_ROOT}/option_comps/appframe/configInit.properties"/>
+		</action>
+		
+		<!--配置应用服务器-->
+		<action name="config jvm appSvr" classname="com.bosssoft.platform.installer.wizard.action.ConfigJvmAppsvr"
+			desc="init DataSource" scale="5">
+		</action>
+		
+		<!--BOSSSOFT_SERVER_HOME创建-->
+		<action name="create BOSSSOFT_SERVER_HOME" classname="com.bosssoft.platform.installer.wizard.action.CreateBossHome"
+			desc="init DataSource" scale="10">
+		</action>
+		
+		<!--设置应用服务器路径-->
+		<action name="set appserver path" classname="com.bosssoft.install.nontax.linux.action.SetAppsvrPath">
+		</action>
+		<!--创建运行的可执行脚本-->
+	  <echo message="...... create startFile"/>
+	 <if>
+		<equals arg1="${APP_SERVER_NAME}" arg2="Tomcat" />
+		<then>
+		  <setvalue key="appsvr_worddir" value="${AS_TOMCAT_HOME}/bin" />
+		</then>
+	<else>
+	   <if>
+		 <equals arg1="${APP_SERVER_NAME}" arg2="WebLogic" />
+		  <then>
+			 <setvalue key="appsvr_worddir" value="${AS_WL_DOMAIN_HOME}" />
+		 </then>
+	   </if>	  
+	</else>
+		</if>
+	  <action name="create startFile" classname="com.bosssoft.install.nontax.linux.action.CreateStartFile"
+			desc="create startFile" scale="10">
+			<parameter name="targetDir" value="${INSTALL_DIR}" />
+			<parameter name="environments" value="JAVA_HOME,classpath,path" />
+			<parameter name="accredit" value="nginx_path,redis_path,appSvr_path,zookeeper_path,java_path" />
+			<parameter name="servers" value="nginx_path,redis_path,zookeeper_path,appSvr_path" />
+			<parameter name="serverWordDir" value="${INSTALL_DIR}/nginx-1.13.0/nginx/sbin,${INSTALL_DIR}/redis-3.2.8,${INSTALL_DIR}/zookeeper-3.4.6/bin,${appsvr_worddir}"/><!--servers中各项服务的工作目录，与servers的顺序对应-->
+		</action>
+		<setvalue key="runFile" value="${INSTALL_DIR}/start.sh" /> 
+		
+		<!--创建卸载运行脚本-->
+		<echo message="...... create uninstall file"/>
+		<action name="uninstall" classname="com.bosssoft.install.nontax.linux.action.CreateUninstallFile"
+			desc="uninstall" scale="10">
+			<parameter name="targetDir" value="${INSTALL_DIR}" />
+			<parameter name="sourceFILE" value="${INSTALL_ROOT}/installer/del.txt" />
+			<!--<parameter name="delpath" value="${INSTALL_DIR}/java_1.8,${INSTALL_DIR}/redis" />-->
+			<parameter name="delpath" value="${INSTALL_DIR}" />
+		</action>	      
+		
+		</actions>
+</project>

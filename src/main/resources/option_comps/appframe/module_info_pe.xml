@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<module descKey="MODULE.APPFRAME" filesPath="${INSTALL_ROOT}/option_comps/appframe/appframe-web.war"
+			required="true" selected="true" size="61.3"
+			nameKey="appframe-web">
+	</module>
+		

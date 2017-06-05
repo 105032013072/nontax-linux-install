@@ -1,0 +1,6 @@
+<servers>
+	<server name="Oracle" version="9i/10g/11g" editorPanel="com.bosssoft.platform.installer.wizard.gui.db.OracleEditorPanel" jars="ojdbc14-11.2.0.1.0.jar"/>
+	<!-- <server name="Sybase" version="12.5/15.0" editorPanel="com.bosssoft.platform.installer.wizard.gui.db.SybaseEditorPanel" jars="sybase_jconn.jar"/> -->
+	<!-- <server name="Informix" version="9.4" editorPanel="com.bosssoft.platform.installer.wizard.gui.db.InformixEditorPanel" jars="infomixjdbc.jar"/> -->
+	<server name="MySql" version="5.0" editorPanel="com.bosssoft.platform.installer.wizard.gui.db.MySqlEditorPanel" jars="mysql-connector-java-3.1.14-bin.jar"/>
+</servers>

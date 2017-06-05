@@ -1,0 +1,11 @@
+location /%app_name%/ {
+				    include appconf/deny.conf;
+				    error_page 418 =200 @bots;
+				    if ($is_bot) {
+				        return 418;
+				    }	
+				    index  index.jsp; 
+						autoindex off;
+				    proxy_pass http://%ip%:%port%/%app_name%/;
+				    include appconf/proxy.conf;
+				}

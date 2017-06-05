@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<module descKey="MODULE.CAS" filesPath="${INSTALL_ROOT}/option_comps/cas/cas-server.war"
+			required="true" selected="true" size="51.9"
+			 nameKey="cas-server">
+	</module>		

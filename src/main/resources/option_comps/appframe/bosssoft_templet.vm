@@ -1,0 +1,72 @@
+
+#############################################################
+# Copyright 2001-2016 bosssoft.com.cn                       #
+#############################################################
+application.id=APPCENTER
+application.name=\u5E94\u7528\u4E2D\u5FC3
+###### Dubbo Setting ######
+dubbo.enable=true
+dubbo.application.name=bosssoft-appcenter
+dubbo.application.owner=bosssoft.com
+#dubbo.registry.address=zookeeper://127.0.0.1:2181?backup=192.168.1.114:2182,192.168.1.114:2183
+#dubbo.registry.address=multicast://224.5.6.7:1234
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+dubbo.protocol.port=6061
+dubbo.service.invoke.timeout=50000
+dubbo.service.allow.no.provider=true
+
+###### Ehcache Setting ######
+ehcache.enable=false
+
+###### Database Settings ######
+multidatasource.enable=false
+multidatasource.xa.dataSourceClassName=com.alibaba.druid.pool.xa.DruidXADataSource
+multidatasource.xa.poolSize=10
+multidatasource.xa.minPoolSize=10
+multidatasource.xa.maxPoolSize=50
+multidatasource.names=mysql
+
+#jdbc.url=jdbc:oracle:thin:@192.168.10.222:1521:orcl
+#jdbc.username=gams0215
+#jdbc.password=bs
+#jdbc.maxActive=500
+
+jdbc.url=$DB_URL
+jdbc.username=$DB_USERNAME
+jdbc.password=$DB_PASSWORD
+jdbc.maxActive=500
+
+mybatis.type_aliases_base_packages=com.bosssoft.platform.appframe.entity,com.bosssoft.platform.dictionary.impl.entity
+mybatis.mapper_scanner_base_packages=com.bosssoft.platform.appframe.mapper,com.bosssoft.platform.dictionary.impl.mapper
+
+
+###### Freemarker Settings #######
+freemarker.enable=false
+freemarker.cache=true
+freemarker.templateLoaderPath=classpath:/ftl/
+
+###### UI Settings ######
+ui.pagecache.enable=false
+
+###### Shiro Settings ######
+#30 days
+shiro.cookie.maxAge=2592000
+#30 min
+shiro.session.timeout=1800000
+
+shiro.redis.host=127.0.0.1:6379
+shiro.redis.maxconnnection=1000
+
+shiro.loginUrl=/login.do
+shiro.kickoutUrl=/login.do?kickout
+shiro.successUrl=/main.do
+shiro.unauthorizedUrl=/?login
+shiro.failureUrl=/casFailure.jsp
+shiro.casServerUrlPrefix=http://$IP:$APP_SERVER_PORT/cas-server
+shiro.casService=http://$IP:$APP_SERVER_PORT/appframe-web/cas
+
+##### Serializer pool settings ######
+serializer.kyro.poolSize=10000
+serializer.kyro.minEvictableIdleTimeMillis=1800000
+#max upload size 5M
+upload.max.filesize=5000000

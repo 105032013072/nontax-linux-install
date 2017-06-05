@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<module descKey="MODULE.NGINX" filesPath="${INSTALL_ROOT}/option_comps/nginx/nginx-1.13.0.zip"
+			required="true" selected="true" size="1.38"
+			 nameKey="nginx">
+	</module>
+		

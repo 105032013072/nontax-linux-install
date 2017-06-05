@@ -1,0 +1,9 @@
+<servers>
+	<server name="Tomcat" version="7.0.54" clusterDeploy="false" editorPanel="com.bosssoft.platform.installer.wizard.gui.as.TomcatEditorPanel"/>
+	<server name="WebLogic" version="10.0" clusterDeploy="true" editorPanel="com.bosssoft.platform.installer.wizard.gui.as.WLEditorPanel"
+		clusterEditorPanel="com.bosssoft.platform.installer.wizard.gui.as.ClusterWLEditorPanel"/>
+	<server name="WebLogic" version="11g" clusterDeploy="true" editorPanel="com.bosssoft.platform.installer.wizard.gui.as.WLEditorPanel"
+		clusterEditorPanel="com.bosssoft.platform.installer.wizard.gui.as.ClusterWLEditorPanel"/>
+	<server name="WebLogic" version="12c" clusterDeploy="true" editorPanel="com.bosssoft.platform.installer.wizard.gui.as.WLEditorPanel"
+		clusterEditorPanel="com.bosssoft.platform.installer.wizard.gui.as.ClusterWLEditorPanel"/>
+</servers>
