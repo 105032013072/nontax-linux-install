@@ -26,7 +26,7 @@ public class ConfigComponents implements IAction{
 	transient Logger logger = Logger.getLogger(getClass());
 	
 	public void execute(IContext context, Map params) throws InstallException {
-		String sourFile=params.get("NGINX_CONFIG_PATH").toString();
+		String sourFile=context.getStringValue("nginx_home")+File.separator+"conf"+File.separator+"nginx.conf";
 		String sourceContext=InstallUtil.readFile(sourFile);
 		String tempContext=InstallUtil.readFile(params.get("CONFIG_TEMPLATE_PATH").toString());
 

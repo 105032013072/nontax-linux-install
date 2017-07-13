@@ -1,0 +1,45 @@
+<servers>
+  <server>
+  	<name>JDK1.8</name>
+  	<sourcePath>${INSTALL_ROOT}/resource/jdk/1.8/jdk.zip</sourcePath>
+  	<destPath>${INSTALL_DIR}/java_1.8</destPath>
+  	<home>${INSTALL_DIR}/java_1.8/jdk1.8.0_91</home>
+  	<paramters>
+  		<paramter key="JAVA_HOME" value="[home]"/>
+  		<paramter key="classpath" value="$JAVA_HOME/lib"/>
+  		<paramter key="path" value="$PATH:$JAVA_HOME/bin"/>
+  		<paramter key="java_path" value="[home]/bin/java"/>
+  	</paramters>
+  </server>
+  	
+  <server>
+  	<name>redis</name>
+  	<sourcePath>${INSTALL_ROOT}/resource/redis/redis.zip</sourcePath>
+  	<destPath>${INSTALL_DIR}</destPath>
+  	<home>${INSTALL_DIR}/redis-3.2.8</home>
+  	<paramters>
+  		<paramter key="redis_path" value="[home]/src/redis-server [home]/redis.conf"/>
+  	</paramters>
+  </server>
+  	
+  <server>
+  	<name>zookeeper</name>
+  	<sourcePath>${INSTALL_ROOT}/resource/zookeeper/zookeeper-3.4.6.zip</sourcePath>
+  	<destPath>${INSTALL_DIR}</destPath>
+  	<home>${INSTALL_DIR}/zookeeper-3.4.6</home>
+  	<paramters>
+  		<paramter key="zookeeper_path" value="[home]/bin/zkServer.sh start"/>
+  	</paramters>
+  </server>
+  	
+  <server>
+  	<name>nginx</name>
+  	<!--多个执行文件用","隔开-->
+  	<installfiles>${INSTALL_ROOT}/option_comps/nginx/nginx_install.sh</installfiles>
+  	<home>${INSTALL_DIR}/nginx-1.13.0</home>
+  	<paramters>
+  		<paramter key="nginx_path" value="[home]/nginx/sbin/nginx -c [home]/conf/nginx.conf"/>
+  	</paramters>
+  </server>
+  	
+</servers>
