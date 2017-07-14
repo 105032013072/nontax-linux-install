@@ -35,6 +35,8 @@
   <server>
   	<name>nginx</name>
   	<!--多个执行文件用","隔开-->
+  	<sourcePath>${INSTALL_ROOT}/option_comps/nginx/nginx-1.13.0.zip</sourcePath>
+  	<destPath>${INSTALL_DIR}</destPath>
   	<installfiles>${INSTALL_ROOT}/option_comps/nginx/nginx_install.sh</installfiles>
   	<home>${INSTALL_DIR}/nginx-1.13.0</home>
   	<paramters>
